@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Aether Autonomous Agent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+          font-family: 'Inter', sans-serif; 
+          background-color: #02040a; 
+          color: #f9fafb; 
+          margin: 0; 
+          overflow: hidden; 
+          background-image: 
+            radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 100%),
+            linear-gradient(to right, rgba(99, 102, 241, 0.02) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(99, 102, 241, 0.02) 1px, transparent 1px);
+          background-size: 100% 100%, 40px 40px, 40px 40px;
+          height: 100vh;
+          width: 100vw;
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+        
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: #1f2937 transparent;
+        }
+
+        .glass-panel {
+          background: rgba(10, 11, 15, 0.7);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @keyframes scanline {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(100%); }
+        }
+        .scanline {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background: linear-gradient(to bottom, transparent, rgba(99, 102, 241, 0.1), transparent);
+          opacity: 0.5;
+          pointer-events: none;
+          z-index: 9999;
+          animation: scanline 8s linear infinite;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.38.0",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div class="scanline"></div>
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

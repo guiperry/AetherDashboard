@@ -1,0 +1,8 @@
+{
+  "name": "Aether Autonomous Agent",
+  "description": "A high-performance autonomous AI agent powered by Gemini, featuring long-term memory, real-time thought processing, and multi-modal tool integration.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
