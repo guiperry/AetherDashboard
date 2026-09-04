@@ -342,7 +342,7 @@ export default function ImageStudio() {
       <div className="flex-1 grid grid-cols-12 gap-8 overflow-hidden">
         {/* Left: Settings */}
         <div className="col-span-12 lg:col-span-4 space-y-6">
-          <div className="bg-gray-900/40 border border-gray-800 rounded-2xl p-6 space-y-6">
+           <div className="bevel-dark-blue rounded-2xl p-6 space-y-6">
             
             {mode === 'VIDEO' && !hasVeoKey && (
               <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex flex-col gap-3">
@@ -446,7 +446,7 @@ export default function ImageStudio() {
         </div>
 
         {/* Right: Stage */}
-        <div className="col-span-12 lg:col-span-8 bg-gray-900/20 border border-gray-800 rounded-3xl relative overflow-hidden flex flex-col">
+         <div className="col-span-12 lg:col-span-8 bevel-dark-blue relative overflow-hidden flex flex-col">
           <div className="absolute top-6 left-6 z-10 flex gap-2">
              <div className="px-4 py-1.5 bg-black/60 backdrop-blur-xl rounded-full border border-gray-800 flex items-center gap-2">
                 <div className={`w-1.5 h-1.5 rounded-full ${isProcessing ? 'bg-indigo-500 animate-ping' : outputUrl ? 'bg-emerald-500' : 'bg-gray-600'}`} />

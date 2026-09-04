@@ -1,5 +1,5 @@
 
-import { GoogleGenAI, Type, GenerateContentResponse } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import { Thought, Memory, AgentStatus } from "../types";
 import { PersistenceService } from "./persistence";
 

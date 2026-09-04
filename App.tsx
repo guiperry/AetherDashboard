@@ -7,8 +7,8 @@ import Sidebar from './components/Sidebar';
 import ThoughtProcess from './components/ThoughtProcess';
 import MemoryGrid from './components/MemoryGrid';
 import AgentControl from './components/AgentControl';
-import LiveTerminal from './components/LiveTerminal';
 import ImageStudio from './components/ImageStudio';
+import BadgeLab from './components/BadgeLab';
 import { Brain, Cpu, Database, Activity, Terminal, Shield, Maximize2, Minimize2, PanelLeftClose, PanelLeft, Eye, EyeOff, RefreshCw, Key, ShieldAlert } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -37,26 +37,26 @@ const App: React.FC = () => {
 
   const agentRef = useRef<GeminiAgentService | null>(null);
 
-  useEffect(() => {
-    agentRef.current = new GeminiAgentService();
-    checkKeyStatus();
-  }, []);
-
-  const checkKeyStatus = async () => {
+  const checkKeyStatus = useCallback(async () => {
     if ((window as any).aistudio?.hasSelectedApiKey) {
       const hasKey = await (window as any).aistudio.hasSelectedApiKey();
       setIsKeyActive(hasKey);
     }
-  };
+  }, []);
 
-  const handleKeySelection = async () => {
+  useEffect(() => {
+    agentRef.current = new GeminiAgentService();
+    checkKeyStatus();
+  }, [checkKeyStatus]);
+
+  const handleKeySelection = useCallback(async () => {
     if ((window as any).aistudio?.openSelectKey) {
       await (window as any).aistudio.openSelectKey();
       setIsKeyActive(true);
       // Re-initialize agent with the new key context
       agentRef.current = new GeminiAgentService();
     }
-  };
+  }, []);
 
   useEffect(() => {
     PersistenceService.saveState({ view: state.view });
@@ -165,13 +165,15 @@ const App: React.FC = () => {
 
   const renderContent = () => {
     switch(state.view) {
+      case 'BADGE_LAB':
+        return <BadgeLab />;
       case 'IMAGE_STUDIO':
         return <ImageStudio />;
       case 'DASHBOARD':
         return (
           <div className="flex-1 grid grid-cols-12 gap-6 p-6 overflow-hidden animate-in fade-in duration-700">
             <div className={`col-span-12 ${isFocusMode ? 'lg:col-span-12' : 'lg:col-span-7'} flex flex-col gap-6 overflow-hidden transition-all duration-500`}>
-              <section className="flex-1 min-h-0 bg-gray-900/30 backdrop-blur-sm border border-gray-800 rounded-3xl overflow-hidden flex flex-col shadow-2xl">
+              <section className="flex-1 min-h-0 bevel-dark-blue backdrop-blur-sm rounded-3xl overflow-hidden flex flex-col">
                 <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between bg-gray-950/40">
                   <div className="flex items-center gap-3">
                     <div className="p-1.5 bg-indigo-500/10 rounded-lg text-indigo-400">
@@ -186,7 +188,7 @@ const App: React.FC = () => {
                 <ThoughtProcess thoughts={state.thoughts} />
               </section>
 
-              <section className="h-44 bg-gray-900/30 backdrop-blur-sm border border-gray-800 rounded-3xl p-6 flex flex-col justify-center shadow-lg">
+              <section className="h-44 bevel-dark-blue-light backdrop-blur-sm rounded-3xl p-6 flex flex-col justify-center">
                 {!isKeyActive ? (
                   <div className="flex flex-col items-center justify-center gap-4 animate-in zoom-in-95">
                     <div className="flex items-center gap-2 text-rose-400 font-black uppercase text-xs tracking-widest">
@@ -208,7 +210,7 @@ const App: React.FC = () => {
 
             {!isFocusMode && (
               <div className="col-span-12 lg:col-span-5 flex flex-col gap-6 overflow-hidden animate-in slide-in-from-right-4 duration-500">
-                <section className="flex-1 min-h-0 bg-gray-900/30 backdrop-blur-sm border border-gray-800 rounded-3xl overflow-hidden flex flex-col shadow-2xl">
+                <section className="flex-1 min-h-0 bevel-dark-blue backdrop-blur-sm rounded-3xl overflow-hidden flex flex-col">
                   <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between bg-gray-950/40">
                     <div className="flex items-center gap-3">
                       <div className="p-1.5 bg-emerald-500/10 rounded-lg text-emerald-400">
@@ -223,7 +225,7 @@ const App: React.FC = () => {
                   <MemoryGrid memories={state.memories} onDelete={deleteMemory} />
                 </section>
 
-                <section className="h-44 bg-gradient-to-br from-indigo-900/20 to-purple-900/10 border border-indigo-500/20 rounded-3xl p-6 flex flex-col justify-between relative group overflow-hidden shadow-2xl">
+                <section className="h-44 bevel-dark-blue-light rounded-3xl p-6 flex flex-col justify-between relative group overflow-hidden">
                   <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-all">
                     <Brain size={120} />
                   </div>
@@ -257,9 +259,6 @@ const App: React.FC = () => {
 
   return (
     <div className="flex h-screen w-screen bg-[#02040a] text-gray-100 overflow-hidden font-inter selection:bg-indigo-500/30">
-      {state.view === 'LIVE_TERMINAL' && (
-        <LiveTerminal onClose={() => setView('DASHBOARD')} />
-      )}
 
       <div className={`transition-all duration-500 ease-in-out h-full overflow-hidden ${isSidebarOpen ? 'w-64' : 'w-0'}`}>
         <Sidebar 
@@ -286,8 +285,8 @@ const App: React.FC = () => {
                 <Cpu size={18} />
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-sm font-black tracking-tighter text-white uppercase tracking-widest">Aether Core</h1>
-                <p className="text-[9px] text-gray-600 font-mono">v3.2.2_AUTONOMOUS</p>
+                <h1 className="text-sm font-black tracking-tighter text-white uppercase tracking-widest">Knirv Server</h1>
+                <p className="text-[9px] text-gray-600 font-mono">COGNITIVE_ENGINE</p>
               </div>
             </div>
           </div>

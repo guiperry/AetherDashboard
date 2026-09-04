@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { AgentStatus } from '../types';
-import { Send, Zap, ChevronRight, Mic, MicOff, Loader2 } from 'lucide-react';
+import { Send, Zap, ChevronRight, Mic, MicOff, Loader2, Radio } from 'lucide-react';
+import LiveTerminal from './LiveTerminal';
 
 interface AgentControlProps {
   onRun: (goal: string) => void;
@@ -11,12 +11,16 @@ interface AgentControlProps {
 const AgentControl: React.FC<AgentControlProps> = ({ onRun, status }) => {
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
+  const [showLiveTerminal, setShowLiveTerminal] = useState(false);
+  const [recognitionError, setRecognitionError] = useState<string | null>(null);
   const recognitionRef = useRef<any>(null);
+  const isRecognitionSupported = useRef<boolean>(false);
 
   useEffect(() => {
     // Initialize Speech Recognition if available
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
+      isRecognitionSupported.current = true;
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
@@ -40,7 +44,8 @@ const AgentControl: React.FC<AgentControlProps> = ({ onRun, status }) => {
       };
 
       recognitionRef.current.onerror = (event: any) => {
-        console.error('Speech recognition error', event.error);
+        console.error('Speech recognition error', event);
+        setRecognitionError(event.error);
         setIsListening(false);
       };
 
@@ -54,11 +59,11 @@ const AgentControl: React.FC<AgentControlProps> = ({ onRun, status }) => {
         recognitionRef.current.stop();
       }
     };
-  }, []);
+  }, [setRecognitionError, setIsListening]);
 
   const toggleListening = () => {
-    if (!recognitionRef.current) {
-      alert("Speech recognition is not supported in this browser.");
+    if (!isRecognitionSupported.current) {
+      alert("Speech recognition is not supported in this browser. Please use Chrome or Edge.");
       return;
     }
 
@@ -67,10 +72,13 @@ const AgentControl: React.FC<AgentControlProps> = ({ onRun, status }) => {
       setIsListening(false);
     } else {
       try {
+        setRecognitionError(null);
         recognitionRef.current.start();
         setIsListening(true);
-      } catch (e) {
+      } catch (e: any) {
         console.error("Failed to start recognition", e);
+        setRecognitionError(e.message || 'Unknown error');
+        setIsListening(false);
       }
     }
   };
@@ -104,51 +112,57 @@ const AgentControl: React.FC<AgentControlProps> = ({ onRun, status }) => {
       <form onSubmit={handleSubmit} className="relative group">
         <div className={`absolute -inset-1 bg-gradient-to-r ${isListening ? 'from-rose-500/20 to-orange-500/20' : 'from-indigo-500/20 to-purple-500/20'} rounded-2xl blur-md opacity-0 group-focus-within:opacity-100 transition-opacity duration-500 pointer-events-none`} />
         
-        <input
+         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={isBusy ? "KIMI_REASONING_IN_PROGRESS..." : isListening ? "Listening to dictation..." : "Define autonomous objective..."}
           disabled={isBusy}
-          className={`w-full bg-gray-950/80 backdrop-blur-sm border rounded-2xl py-5 pl-14 pr-16 text-sm font-medium focus:outline-none transition-all placeholder:text-gray-700 placeholder:font-mono text-gray-200 ${isListening ? 'border-rose-500/40 ring-1 ring-rose-500/10' : 'border-gray-800 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/10'}`}
+          className={`w-full bg-gray-950/80 backdrop-blur-sm bevel-dark-blue-light rounded-2xl py-5 pl-14 pr-16 text-sm font-medium focus:outline-none transition-all placeholder:text-gray-700 placeholder:font-mono text-gray-200 ${isListening ? 'border-rose-500/40 ring-1 ring-rose-500/10' : 'focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/10'}`}
         />
+        
+        {recognitionError && (
+          <div className="mt-2 text-xs text-rose-400 font-mono bg-rose-500/10 px-3 py-1.5 rounded-lg border border-rose-500/20">
+            ERROR: {recognitionError.toUpperCase()}
+          </div>
+        )}
 
-        {/* Voice Dictation Button */}
-        <button
-          type="button"
-          onClick={toggleListening}
-          disabled={isBusy}
-          className={`absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-300 ${
-            isListening 
-            ? 'bg-rose-600 text-white shadow-lg shadow-rose-500/20 animate-pulse' 
-            : 'bg-gray-900/50 text-gray-500 hover:text-indigo-400 border border-gray-800/50'
-          } ${isBusy ? 'opacity-20 cursor-not-allowed' : ''}`}
-          title={isListening ? "Stop Dictation" : "Start Voice Dictation"}
-        >
-          {isListening ? <Mic size={18} /> : <Mic size={18} />}
-        </button>
+         {/* Voice Dictation Button - Original functionality with animation */}
+          <button
+           type="button"
+           onClick={toggleListening}
+           disabled={isBusy}
+           className={`absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-300 ${
+             isListening 
+             ? 'bg-rose-600 text-white shadow-lg shadow-rose-500/20 animate-pulse' 
+             : 'bevel-dark-blue-light text-gray-500 hover:text-indigo-400 bevel-dark-blue-hover'
+           } ${isBusy ? 'opacity-20 cursor-not-allowed' : ''}`}
+           title={isListening ? "Stop Dictation" : "Start Voice Dictation"}
+         >
+           {isListening ? <MicOff size={18} /> : <Mic size={18} />}
+         </button>
 
-        <button
-          type="submit"
-          disabled={isBusy || !input.trim()}
-          className={`absolute right-2.5 top-2.5 bottom-2.5 w-12 flex items-center justify-center rounded-xl transition-all duration-300 ${
-            isBusy 
-            ? 'bg-gray-900 text-gray-700 cursor-not-allowed border border-gray-800' 
-            : input.trim() 
-              ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-500/30 hover:bg-indigo-500 hover:scale-105 active:scale-95 border border-indigo-400/20' 
-              : 'bg-gray-900/50 text-gray-700 border border-gray-800/50'
-          }`}
-        >
-          {isBusy ? (
-            <div className="flex gap-1 items-center">
-              <span className="w-1 h-1 bg-indigo-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
-              <span className="w-1 h-1 bg-indigo-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
-              <span className="w-1 h-1 bg-indigo-400 rounded-full animate-bounce" />
-            </div>
-          ) : (
-            <Send size={20} className={input.trim() ? 'animate-in fade-in zoom-in duration-300' : ''} />
-          )}
-        </button>
+          <button
+           type="submit"
+           disabled={isBusy || !input.trim()}
+           className={`absolute right-2.5 top-2.5 bottom-2.5 w-12 flex items-center justify-center rounded-xl transition-all duration-300 ${
+             isBusy 
+             ? 'bevel-dark-blue text-gray-700 cursor-not-allowed' 
+             : input.trim() 
+               ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-500/30 hover:bg-indigo-500 hover:scale-105 active:scale-95 border border-indigo-400/20' 
+               : 'bevel-dark-blue-light text-gray-700'
+           }`}
+         >
+           {isBusy ? (
+             <div className="flex gap-1 items-center">
+               <span className="w-1 h-1 bg-indigo-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
+               <span className="w-1 h-1 bg-indigo-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
+               <span className="w-1 h-1 bg-indigo-400 rounded-full animate-bounce" />
+             </div>
+           ) : (
+             <Send size={20} className={input.trim() ? 'animate-in fade-in zoom-in duration-300' : ''} />
+           )}
+         </button>
       </form>
       
       <div className="mt-4 flex flex-wrap gap-2">
@@ -163,6 +177,8 @@ const AgentControl: React.FC<AgentControlProps> = ({ onRun, status }) => {
           </button>
         ))}
       </div>
+      
+      {showLiveTerminal && <LiveTerminal onClose={() => setShowLiveTerminal(false)} />}
     </div>
   );
 };

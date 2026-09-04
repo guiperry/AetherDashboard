@@ -52,10 +52,10 @@ const ThoughtProcess: React.FC<ThoughtProcessProps> = ({ thoughts }) => {
         </div>
       )}
       
-      {thoughts.map((thought, idx) => (
+       {thoughts.map((thought, idx) => (
         <div 
           key={thought.id}
-          className={`group relative p-4 rounded-2xl border transition-all animate-in fade-in slide-in-from-top-4 duration-500 ${getTypeStyles(thought.type)}`}
+          className={`group relative p-4 rounded-2xl bevel-dark-blue-light transition-all animate-in fade-in slide-in-from-top-4 duration-500 ${getTypeStyles(thought.type)}`}
           style={{ animationDelay: `${idx * 50}ms` }}
         >
           <div className="flex items-start gap-4">

@@ -242,7 +242,7 @@ export default function LiveTerminal({ onClose }: LiveTerminalProps) {
           )}
         </div>
 
-        <div className="w-full max-w-2xl bg-gray-900/50 border border-gray-800 rounded-3xl p-6 h-64 flex flex-col shadow-inner">
+         <div className="w-full max-w-2xl bevel-dark-blue rounded-3xl p-6 h-64 flex flex-col shadow-inner">
            <div className="flex items-center gap-2 mb-4 opacity-50 text-[10px] font-bold uppercase tracking-widest border-b border-gray-800 pb-2">
              <MessageSquare size={12} /> Live Transcript
            </div>

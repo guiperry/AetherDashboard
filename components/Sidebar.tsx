@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { AgentStatus, AppView } from '../types';
-import { LayoutDashboard, History, Settings, Layers, HelpCircle, ShieldCheck, Radio, Sparkles } from 'lucide-react';
+import { LayoutDashboard, History, Settings, Layers, HelpCircle, ShieldCheck, Radio, Sparkles, Award } from 'lucide-react';
 
 interface SidebarProps {
   status: AgentStatus;
@@ -13,21 +13,21 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ status, memoriesCount, currentView, onSetView }) => {
   const navItems = [
     { id: 'DASHBOARD' as AppView, icon: <LayoutDashboard size={18} />, label: 'Neural Desktop' },
-    { id: 'LIVE_TERMINAL' as AppView, icon: <Radio size={18} />, label: 'Sync Channel' },
+    { id: 'BADGE_LAB' as AppView, icon: <Award size={18} />, label: 'Badge Lab' },
     { id: 'IMAGE_STUDIO' as AppView, icon: <Sparkles size={18} />, label: 'Media Lab' },
     { id: 'MEMORIES' as AppView, icon: <Layers size={18} />, label: 'Archive', badge: memoriesCount },
     { id: 'SAFETY' as AppView, icon: <ShieldCheck size={18} />, label: 'Protocols' },
   ];
 
   return (
-    <aside className="w-64 h-full bg-[#05060a] border-r border-gray-800 flex flex-col z-50 overflow-hidden">
+     <aside className="w-64 h-full bg-[#05060a] border-r border-gray-800 flex flex-col z-50 overflow-hidden">
       <div className="p-8 flex items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-900 flex items-center justify-center font-black text-white text-xl shadow-lg shadow-indigo-500/10">
-          Æ
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00c0fa] to-[#2b56f5] flex items-center justify-center font-black text-white text-xl shadow-lg shadow-[#00c0fa]/20 bevel-dark-blue-light">
+          K
         </div>
         <div className="flex flex-col">
-          <span className="font-black text-sm tracking-widest text-white uppercase">Aether</span>
-          <span className="text-[10px] text-gray-600 font-mono tracking-tighter">AGI_SYNAPSE</span>
+          <span className="font-black text-sm tracking-widest text-white uppercase">Knirv Server</span>
+          <span className="text-[10px] text-gray-600 font-mono tracking-tighter">COGNITIVE_ENGINE</span>
         </div>
       </div>
 
@@ -60,8 +60,8 @@ const Sidebar: React.FC<SidebarProps> = ({ status, memoriesCount, currentView, o
         ))}
       </nav>
 
-      <div className="p-6 mt-auto">
-        <div className="bg-gray-900/40 rounded-2xl p-4 border border-gray-800/50">
+       <div className="p-6 mt-auto">
+        <div className="bevel-dark-blue rounded-2xl p-4">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Autonomous Core</p>

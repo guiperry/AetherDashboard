@@ -9,7 +9,7 @@ export enum AgentStatus {
   EDITING = 'EDITING'
 }
 
-export type AppView = 'DASHBOARD' | 'LIVE_TERMINAL' | 'IMAGE_STUDIO' | 'MEMORIES' | 'SAFETY';
+export type AppView = 'DASHBOARD' | 'BADGE_LAB' | 'IMAGE_STUDIO' | 'MEMORIES' | 'SAFETY';
 
 export interface Memory {
   id: string;
